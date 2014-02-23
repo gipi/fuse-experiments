@@ -2,6 +2,8 @@ import logging
 from logging import config as log_config
 import sys
 from fuse import FUSE, FuseOSError, Operations, LoggingMixIn
+import os
+import stat
 
 
 log_config.dictConfig({
@@ -30,8 +32,26 @@ log_config.dictConfig({
 	}
 })
 
+
+
 class Hello(LoggingMixIn, Operations):
-	pass
+	def readdir(self, path, fh):
+		return super(Hello, self).readdir(path, fh) + ['world', ]
+
+	def getattr(self, path, fh=None):
+		try:
+			return super(Hello, self).getattr(path, fh)
+		except:
+			return {
+				"st_atime": 0L,
+				"st_ctime": 0L,
+				"st_gid": 0,
+				"st_mode": stat.S_IFREG | 0755,
+				"st_mtime": 0L,
+				"st_nlink": 1,
+				"st_size": 0,
+				"st_uid": 0,
+			}
 
 if __name__ == "__main__":
 	#print >> sys.stderr, fuse.APIVersion()
