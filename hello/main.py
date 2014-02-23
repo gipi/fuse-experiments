@@ -1,7 +1,6 @@
 import logging
 import sys
 from fuse import FUSE, FuseOSError, Operations, LoggingMixIn
-import fuse
 
 class Hello(LoggingMixIn, Operations):
 	pass
